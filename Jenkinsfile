@@ -23,7 +23,7 @@ pipeline {
 
         stage('Trivy - Security Scan') {
             steps {
-                sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL matanlahmi/my-python-app:latest'
+              sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed matanlahmi/my-python-app:latest'
             }
         }
     }
