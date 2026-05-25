@@ -1,6 +1,6 @@
 pipeline {
     agent { label 'docker-agent' }
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -10,7 +10,7 @@ pipeline {
 
         stage('Flake8 - Code Quality') {
             steps {
-                sh 'pip install flake8'
+                sh 'pip install flake8 --break-system-packages'
                 sh 'flake8 main.py'
             }
         }
