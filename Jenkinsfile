@@ -23,9 +23,14 @@ pipeline {
 
         stage('Trivy - Security Scan') {
             steps {
-              sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed matanlahmi/my-python-app:latest'
+              sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed matanlahmi/my-python-app:latest .'
             }
         }
+         stage('push to DOCKER-HUB') {
+            steps {
+              sh 'docker build -t matanlahmi/my-python-app:${BUILD_NUMBER} ."
+            }
+         }
     }
 
     post {
