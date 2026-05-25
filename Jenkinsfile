@@ -23,13 +23,16 @@ pipeline {
 
         stage('Trivy - Security Scan') {
             steps {
-              sh '''
-              trivy image \
-          --exit-code 1 \
-          --severity HIGH,CRITICAL \
-          --ignore-unfixed \
-          matanlahmi/my-python-app:latest
-        '''
+                script {
+             def imageToScan = "matanlahmi/my-python-app:latest"
+            sh """
+            trivy image \
+            --exit-code 1 \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            ${imageToScan}
+            """
+               }
             }
         }
          stage('push to DOCKER-HUB') {
