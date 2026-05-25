@@ -28,7 +28,7 @@ pipeline {
         }
          stage('push to DOCKER-HUB') {
             steps {
-              sh 'docker build -t matanlahmi/my-python-app:${BUILD_NUMBER} ."
+              sh 'docker build -t matanlahmi/my-python-app:${BUILD_NUMBER} .'
             }
          }
     }
