@@ -1,29 +1,36 @@
 pipeline {
-    agent { label 'docker-python-agent' }
-    
+    agent { label 'docker-agent' }
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Build Image') {
+
+        stage('Flake8 - Code Quality') {
             steps {
-                script {
-                    // כאן ג'נקינס בונה את האימג' מה-Dockerfile שלך
-                    docker.build("matanlahmi/my-agent:latest")
-                }
+                sh 'pip install flake8'
+                sh 'flake8 main.py'
             }
         }
-        stage('Push to Hub') {
+
+        stage('Build Image') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-                        def customImage = docker.image("matanlahmi/my-agent:latest")
-                        customImage.push()
-                    }
-                }
+                sh 'docker build -t matanlahmi/my-python-app:latest .'
             }
+        }
+
+        stage('Trivy - Security Scan') {
+            steps {
+                sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL matanlahmi/my-python-app:latest'
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
